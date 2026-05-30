@@ -1,0 +1,77 @@
+# Time Series Forecast — Base Configuration
+# Ported from kaggle-ts-forecast conf/base/parameters.yml + catalog.yml
+
+# ===================== Data =====================
+data:
+  raw_path: "data/01_raw/train.csv"
+  date_column: "date"
+  sample_submission: "data/01_raw/sample_submission.csv"
+
+# ===================== Target =====================
+target:
+  name: "sales"
+  groupby_columns: ["store", "item"]
+
+# ===================== Preprocessing =====================
+preprocessing:
+  fill_method: "ffill"  # ffill, interpolate, median
+  categorical_columns: ["store", "item"]
+  scaler_type: "standard"  # standard, robust
+
+# ===================== Feature Engineering =====================
+features:
+  datetime_features: true
+
+  lag_periods: [1, 2, 3, 7, 14, 28]
+  rolling_windows: [7, 14, 30]
+  diff_periods: [1, 7, 30]
+  ewm_spans: [7, 14, 30]
+
+  exclude_columns:
+    - "date"
+
+# ===================== Train/Test Split =====================
+split:
+  test_ratio: 0.2
+
+# ===================== Model Training =====================
+models:
+  lightgbm:
+    objective: "regression"
+    metric: "mae"
+    n_estimators: 1000
+    learning_rate: 0.05
+    num_leaves: 31
+    max_depth: -1
+    verbosity: -1
+    random_state: 42
+    n_jobs: -1
+
+  xgboost:
+    objective: "reg:squarederror"
+    n_estimators: 1000
+    learning_rate: 0.05
+    max_depth: 6
+    random_state: 42
+    n_jobs: -1
+    verbosity: 0
+
+  random_forest:
+    n_estimators: 300
+    max_depth: 20
+    min_samples_leaf: 5
+    random_state: 42
+    n_jobs: -1
+
+  ridge:
+    alpha: 1.0
+    random_state: 42
+
+training:
+  cv_splits: 5
+  early_stopping_rounds: 50
+
+# ===================== Evaluation =====================
+evaluation:
+  metrics_output: "data/08_reporting/metrics.json"
+  top_n_features: 20

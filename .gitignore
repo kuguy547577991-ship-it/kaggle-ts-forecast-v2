@@ -1,0 +1,11 @@
+data/raw/
+data/processed/
+data/models/
+mlruns/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
